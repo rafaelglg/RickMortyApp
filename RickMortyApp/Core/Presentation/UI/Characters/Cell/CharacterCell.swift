@@ -39,6 +39,10 @@ struct CharacterCell: View {
     var infoSection: some View {
         VStack(alignment: .leading) {
             Text(character.name)
+                .lineLimit(1)
+                .allowsTightening(true)
+                .minimumScaleFactor(0.6)
+                .truncationMode(.tail)
                 .font(.headline)
             Text(character.gender)
                 .font(.callout)

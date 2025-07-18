@@ -10,8 +10,12 @@ import Foundation
 @MainActor
 final class CharacterViewModelMock: CharacterViewModel {
     let delay: Double
-    let characters: [Character]
     let loadState: LoadState<[Character]>
+    
+    var characterContainer: CharacterContainer?
+    var isLoadingMore: Bool = false
+    var characters: [Character]
+    var canLoadMore: Bool = true
     
     init(
         characters: [Character] = Character.mocks,
@@ -23,7 +27,18 @@ final class CharacterViewModelMock: CharacterViewModel {
         self.loadState = loadState
     }
     
-    func getCharacter() async {
+    func getCharacters() async {
         try? await Task.sleep(for: .seconds(delay))
+    }
+    
+    func loadMoreCharacters() async {
+        isLoadingMore = true
+        try? await Task.sleep(for: .seconds(1.5))
+        isLoadingMore = false
+        characters.append(Character.mock)
+    }
+    
+    func hasReachedEnd(of character: Character) -> Bool {
+        characters.last == character
     }
 }

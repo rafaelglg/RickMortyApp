@@ -19,30 +19,11 @@ struct APIServiceImpl: APIService {
     /// - Returns: A decoded object of type `T` conforming to `Codable`.
     /// - Throws: An `APIError` if the URL is invalid, the request fails, or decoding fails.
     func fetchCharacters<T: Codable>(endpoint: RickMortyEndpoints) async throws -> T {
-        let url = try buildURL(endpoint: endpoint)
+        let url = try endpoint.asURL()
         let (data, response) = try await URLSession.shared.data(from: url)
         try handleResponse(response: response)
         let decode = try JSONDecoder().decode(T.self, from: data)
         return decode
-    }
-    
-    /// Constructs a valid `URL` from the given endpoint.
-    ///
-    /// - Parameter endpoint: The API endpoint path.
-    /// - Returns: A fully constructed `URL`.
-    /// - Throws: `APIError.invalidURL` if the URL is malformed.
-    func buildURL(endpoint: RickMortyEndpoints) throws -> URL {
-        var components = URLComponents()
-        components.scheme = endpoint.scheme
-        components.host = endpoint.host
-        components.path = endpoint.basePath + endpoint.path
-        components.queryItems = endpoint.queryItems
-        
-        guard let url = components.url else {
-            throw APIError.invalidURL
-        }
-        
-        return url
     }
     
     /// Validates the HTTP response status code.

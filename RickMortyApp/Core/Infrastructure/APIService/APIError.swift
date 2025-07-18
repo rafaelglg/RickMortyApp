@@ -11,6 +11,7 @@ enum APIError: Error, LocalizedError, Equatable {
     case invalidURL
     case requestFailed(statusCode: Int)
     case decodingError(Error)
+    case noNextPage
     
     var errorDescription: String? {
         switch self {
@@ -20,6 +21,8 @@ enum APIError: Error, LocalizedError, Equatable {
             return "The API request failed with status code \(statusCode)."
         case .decodingError(let error):
             return "Failed to process the server's response due to error: \(error.localizedDescription)."
+        case .noNextPage:
+            return "There is no next page available."
         }
     }
     
@@ -31,6 +34,8 @@ enum APIError: Error, LocalizedError, Equatable {
             return lhsCode == rhsCode
         case let (.decodingError(lhsError), .decodingError(rhsError)):
             return String(describing: lhsError) == String(describing: rhsError)
+        case (.noNextPage, .noNextPage):
+            return true
         default:
             return false
         }

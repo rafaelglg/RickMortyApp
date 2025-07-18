@@ -6,17 +6,15 @@
 //
 
 protocol CharacterService: Sendable {
-    func getCharacters() async throws -> [Character]
+    func getCharacters(endpoint: RickMortyEndpoints) async throws -> CharacterContainer 
 }
 
 struct CharacterServiceImpl: CharacterService {
     
     let apiService: APIService
     
-    func getCharacters() async throws -> [Character] {
-        let response: CharacterContainer = try await apiService.fetchCharacters(
-            endpoint: .character(page: 15)
-        )
-        return response.results
+    func getCharacters(endpoint: RickMortyEndpoints) async throws -> CharacterContainer {
+        let response: CharacterContainer = try await apiService.fetchCharacters(endpoint: endpoint)
+        return response
     }
 }

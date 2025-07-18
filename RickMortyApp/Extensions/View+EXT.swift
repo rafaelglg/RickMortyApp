@@ -21,4 +21,15 @@ extension View {
             )
         )
     }
+    
+    func removeListRowFormatting() -> AnyView {
+        self
+            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowBackground(Color.clear)
+            .toAnyView()
+    }
+    
+    func toAnyView() -> AnyView {
+        AnyView(self)
+    }
 }

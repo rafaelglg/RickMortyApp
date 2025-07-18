@@ -6,14 +6,14 @@
 //
 
 protocol CharacterUseCase: Sendable {
-    func execute() async throws -> [Character]
+    func execute(endpoint: RickMortyEndpoints) async throws -> CharacterContainer
 }
 
 struct CharacterUseCaseImpl: CharacterUseCase {
     
     let repository: CharacterRepository
     
-    func execute() async throws -> [Character] {
-        try await repository.getCharacters()
+    func execute(endpoint: RickMortyEndpoints) async throws -> CharacterContainer {
+        try await repository.getCharacters(endpoint: endpoint)
     }
 }
