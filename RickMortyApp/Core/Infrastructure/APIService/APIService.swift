@@ -13,29 +13,17 @@ protocol APIService: Sendable {
 
 struct APIServiceImpl: APIService {
     
-    let urlBase: String
-    
-    init(urlBase: String = Constants.urlBase) {
-        self.urlBase = urlBase
-    }
-    
-    /// Performs an asynchronous network request to the given endpoint and decodes the result.
+    /// Performs an asynchronous network request to the specified endpoint and decodes the response.
     ///
-    /// - Parameters:
-    ///   - endpoint: The specific API endpoint to request.
+    /// - Parameter endpoint: The API endpoint to request.
     /// - Returns: A decoded object of type `T` conforming to `Codable`.
     /// - Throws: An `APIError` if the URL is invalid, the request fails, or decoding fails.
     func fetchCharacters<T: Codable>(endpoint: RickMortyEndpoints) async throws -> T {
-        
-        do {
-            let url = try buildURL(endpoint: endpoint)
-            let (data, response) = try await URLSession.shared.data(from: url)
-            try handleResponse(response: response)
-            let decode = try JSONDecoder().decode(T.self, from: data)
-            return decode
-        } catch {
-            throw APIError.decodingError(error)
-        }
+        let url = try buildURL(endpoint: endpoint)
+        let (data, response) = try await URLSession.shared.data(from: url)
+        try handleResponse(response: response)
+        let decode = try JSONDecoder().decode(T.self, from: data)
+        return decode
     }
     
     /// Constructs a valid `URL` from the given endpoint.
@@ -44,8 +32,13 @@ struct APIServiceImpl: APIService {
     /// - Returns: A fully constructed `URL`.
     /// - Throws: `APIError.invalidURL` if the URL is malformed.
     func buildURL(endpoint: RickMortyEndpoints) throws -> URL {
+        var components = URLComponents()
+        components.scheme = endpoint.scheme
+        components.host = endpoint.host
+        components.path = endpoint.basePath + endpoint.path
+        components.queryItems = endpoint.queryItems
         
-        guard let url = URL(string: urlBase + endpoint.rawValue) else {
+        guard let url = components.url else {
             throw APIError.invalidURL
         }
         

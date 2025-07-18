@@ -5,11 +5,21 @@
 //  Created by Rafael Loggiodice on 17/7/25.
 //
 
+import Foundation
+
 struct CharacterContainer: Codable {
+    let info: Info
     let results: [Character]
 }
 
-struct Character: Codable {
+struct Info: Codable {
+    let count: Int
+    let pages: Int
+    let next: String
+    let prev: String?
+}
+
+struct Character: Codable, Identifiable, Hashable {
     let id: Int
     let name: String
     let status: String
@@ -23,8 +33,20 @@ struct Character: Codable {
     let url: String
     let created: String
     
+    var imageURL: URL {
+        guard let url = URL(string: image) else {
+            return URL(filePath: "")
+        }
+        
+        return url
+    }
+    
     static var mock: Character {
-        return .mocks[0]
+        .mocks[0]
+    }
+    
+    static var empty: Character {
+        Character(id: 0, name: "", status: "", species: "", type: "", gender: "", origin: Origin(name: "", url: ""), location: Location(name: "", url: ""), image: "", episode: [""], url: "", created: "")
     }
     
     static var mocks: [Character] {
@@ -76,17 +98,40 @@ struct Character: Codable {
                 ],
                 url: "https://rickandmortyapi.com/api/character/2",
                 created: "2017-11-04T18:50:21.651Z"
+            ),
+            Character(
+                id: 21,
+                name: "Aqua Morty",
+                status: "unknown",
+                species: "Humanoid",
+                type: "Fish-Person",
+                gender: "Male",
+                origin: Origin(
+                    name: "unknown",
+                    url: ""
+                ),
+                location: Location(
+                    name: "Citadel of Ricks",
+                    url: "https://rickandmortyapi.com/api/location/3"
+                ),
+                image: "",
+                episode: [
+                    "https://rickandmortyapi.com/api/episode/10",
+                    "https://rickandmortyapi.com/api/episode/22"
+                ],
+                url: "https://rickandmortyapi.com/api/character/21",
+                created: "2017-11-04T22:39:48.055Z"
             )
         ]
     }
 }
 
-struct Origin: Codable {
+struct Origin: Codable, Hashable {
     let name: String
     let url: String
 }
 
-struct Location: Codable {
+struct Location: Codable, Hashable {
     let name: String
     let url: String
 }

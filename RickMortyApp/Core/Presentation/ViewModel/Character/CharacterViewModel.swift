@@ -9,7 +9,10 @@ import Foundation
 
 @MainActor
 protocol CharacterViewModel: Sendable {
-    func getCharacter() async throws -> [Character]
+    var characters: [Character] { get }
+    var loadState: LoadState<[Character]> { get }
+    
+    func getCharacter() async
 }
 
 @Observable
@@ -17,15 +20,21 @@ protocol CharacterViewModel: Sendable {
 final class CharacterViewModelImpl: CharacterViewModel {
     
     let useCase: CharacterUseCase
-    var characters: [Character]?
+    private(set) var characters: [Character] = []
+    private(set) var loadState: LoadState<[Character]> = .initial
     
     init(useCase: CharacterUseCase) {
         self.useCase = useCase
     }
     
-    func getCharacter() async throws -> [Character] {
-        let response = try await useCase.execute()
-        characters = response
-        return response
+    func getCharacter() async {
+        loadState = .loading
+        
+        do {
+            characters = try await useCase.execute()
+            loadState = .success(characters)
+        } catch {
+            loadState = .failure(error)
+        }
     }
 }
