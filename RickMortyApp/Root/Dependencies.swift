@@ -6,14 +6,39 @@
 //
 
 @MainActor
-final class Dependencies {
+protocol Dependencies {
+    func makeCharacterViewModel(persistance: PersistanceServices) -> CharacterViewModel
+    func makeSettingsViewModel(persistance: PersistanceServices) -> SettingsViewModel
+}
+
+@MainActor
+final class DependenciesMock: Dependencies {
     
-    func makeCharacterViewModel() -> CharacterViewModel {
+    func makeCharacterViewModel(persistance: PersistanceServices) -> CharacterViewModel {
+        CharacterViewModelMock(loadState: .success(Character.mocks))
+    }
+    
+    func makeSettingsViewModel(persistance: PersistanceServices) -> SettingsViewModel {
+        SettingsViewModelMock()
+    }
+}
+
+@MainActor
+final class DependenciesImpl: Dependencies {
+    
+    func makeCharacterViewModel(persistance: PersistanceServices) -> CharacterViewModel {
         let apiService: APIService = APIServiceImpl()
         let service: CharacterService = CharacterServiceImpl(apiService: apiService)
-        let repository: CharacterRepository = CharacterRepositoryImpl(service: service)
+        let repository: CharacterRepository = CharacterRepositoryImpl(
+            service: service,
+            persistance: persistance
+        )
         let useCase: CharacterUseCase = CharacterUseCaseImpl(repository: repository)
         
         return CharacterViewModelImpl(useCase: useCase)
+    }
+    
+    func makeSettingsViewModel(persistance: PersistanceServices) -> SettingsViewModel {
+        SettingsViewModelImpl(localPersistance: persistance)
     }
 }

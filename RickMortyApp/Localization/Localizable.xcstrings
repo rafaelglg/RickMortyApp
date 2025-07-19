@@ -1,6 +1,36 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "1" : {
+
+    },
+    "1.0" : {
+
+    },
+    "App Storage" : {
+
+    },
+    "Application" : {
+
+    },
+    "Build Number" : {
+
+    },
+    "Cached characters help speed up the app. You can clear them to free up space. This action is permanent." : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Characters" : {
+
+    },
+    "Clear cache" : {
+
+    },
+    "Clear Cache?" : {
+
+    },
     "Could not load characters" : {
       "localizations" : {
         "es" : {
@@ -10,6 +40,15 @@
           }
         }
       }
+    },
+    "Created by Rafael loggiodice." : {
+
+    },
+    "Delete Entire Cache" : {
+
+    },
+    "Episodes" : {
+
     },
     "Loading..." : {
       "localizations" : {
@@ -30,6 +69,18 @@
           }
         }
       }
+    },
+    "Settings" : {
+
+    },
+    "Size: %@ MB" : {
+
+    },
+    "This will permanently remove all cached characters. You’ll need to re-download data next time. Do you want to continue?" : {
+
+    },
+    "Version" : {
+
     }
   },
   "version" : "1.0"

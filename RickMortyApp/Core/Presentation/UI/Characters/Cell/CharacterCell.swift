@@ -10,6 +10,15 @@ import SwiftUI
 struct CharacterCell: View {
     
     let character: Character
+    let persistance: PersistanceServices
+    
+    init(
+        character: Character,
+        persistance: PersistanceServices
+    ) {
+        self.character = character
+        self.persistance = persistance
+    }
     
     var body: some View {
         HStack(spacing: 20) {
@@ -19,21 +28,16 @@ struct CharacterCell: View {
     }
     
     var imageSection: some View {
-        VStack {
-            AsyncImage(url: character.imageURL) { image in
-                image.resizable()
-                    .scaledToFit()
-                    .frame(width: 120, height: 120)
-                    .clipShape(.rect(cornerRadius: 20))
-                    .transition(.opacity)
-                    .animation(.bouncy, value: character.imageURL)
-            } placeholder: {
-                Rectangle()
-                    .frame(width: 120, height: 120)
-                    .shimmerEffect()
-                    .clipShape(.rect(cornerRadius: 10))
-            }
-        }
+        ImageLoader(
+            viewModel: ImageLoaderViewodelImpl(
+                persistance: persistance,
+                url: character.imageURL
+            ),
+            size: CGSize(
+                width: 120,
+                height: 120
+            )
+        )
     }
     
     var infoSection: some View {
@@ -53,18 +57,27 @@ struct CharacterCell: View {
 
 #Preview("Mock") {
     List {
-        CharacterCell(character: .mock)
+        CharacterCell(
+            character: .mock,
+            persistance: MockPersistanceServices()
+        )
     }
 }
 
 #Preview("W/out information") {
     List {
-        CharacterCell(character: .empty)
+        CharacterCell(
+            character: .empty,
+            persistance: MockPersistanceServices()
+        )
     }
 }
 
 #Preview("W/out picture") {
     List {
-        CharacterCell(character: .mocks[2])
+        CharacterCell(
+            character: .mocks[2],
+            persistance: MockPersistanceServices()
+        )
     }
 }

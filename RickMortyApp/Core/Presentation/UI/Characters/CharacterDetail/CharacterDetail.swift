@@ -21,7 +21,7 @@ struct CharacterDetail: View {
                     .bold()
             }
         }
-        .ignoresSafeArea()
+        .clipped()
     }
     
     var imageSection: some View {
@@ -34,20 +34,20 @@ struct CharacterDetail: View {
                 Rectangle()
                     .frame(width: 450, height: 450)
                     .shimmerEffect()
-                    .clipShape(.rect(cornerRadius: 25))
+                    .clipShape(.rect(cornerRadius: 10))
             case .success(let image):
                 image
                     .resizable()
                     .scaledToFill()
                     .frame(width: 450, height: 450)
-                    .clipShape(.rect(cornerRadius: 25))
+                    .clipShape(.rect(cornerRadius: 10))
             case .failure:
                 Image(systemName: "photo")
                     .resizable()
                     .scaledToFill()
                     .frame(width: 440, height: 440)
                     .foregroundColor(.gray)
-                    .clipShape(.rect(cornerRadius: 25))
+                    .clipShape(.rect(cornerRadius: 10))
             @unknown default:
                 EmptyView()
             }

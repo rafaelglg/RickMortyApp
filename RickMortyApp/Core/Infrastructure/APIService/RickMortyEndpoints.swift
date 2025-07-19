@@ -10,8 +10,7 @@ import Foundation
 enum RickMortyEndpoints {
     case character(page: Int?)
     case episode(page: Int?)
-    case location(page: Int?)
-    case absolute(url: URL)
+    case absolute(url: URL?)
     
     /// The path component of the endpoint.
     ///
@@ -20,7 +19,6 @@ enum RickMortyEndpoints {
         switch self {
         case .character: return "/character"
         case .episode: return "/episode"
-        case .location: return "/location"
         case .absolute: return ""
         }
     }
@@ -40,8 +38,7 @@ enum RickMortyEndpoints {
     var queryItems: [URLQueryItem]? {
         switch self {
         case .character(let page),
-                .episode(let page),
-                .location(let page):
+                .episode(let page):
             if let page {
                 return [URLQueryItem(name: "page", value: "\(page)")]
             }
@@ -57,6 +54,9 @@ enum RickMortyEndpoints {
     func asURL() throws -> URL {
         switch self {
         case .absolute(let url):
+            guard let url else {
+                throw APIError.invalidURL
+            }
             return url
         default:
             var components = URLComponents()

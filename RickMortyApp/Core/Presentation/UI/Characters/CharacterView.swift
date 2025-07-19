@@ -9,7 +9,16 @@ import SwiftUI
 
 struct CharacterView: View {
     
+    let persistance: PersistanceServices
     @State var viewModel: CharacterViewModel
+    
+    init(
+        viewModel: CharacterViewModel,
+        persistance: PersistanceServices
+    ) {
+        self.viewModel = viewModel
+        self.persistance = persistance
+    }
     
     var body: some View {
         NavigationStack {
@@ -30,9 +39,11 @@ struct CharacterView: View {
                 errorView(error: error)
             }
         }
+        .searchable(text: .constant(""))
+        .navigationTitle("Characters")
         .scrollIndicators(.hidden)
         .navigationDestination(for: Character.self) { character in
-            Text(character.created)
+            CharacterDetail(character: character)
         }
     }
     
@@ -46,12 +57,15 @@ struct CharacterView: View {
     func successView() -> some View {
         ForEach(viewModel.characters) { character in
             NavigationLink(value: character) {
-                CharacterCell(character: character)
-                    .onAppear {
-                        if viewModel.canLoadMore && viewModel.hasReachedEnd(of: character) {
-                            Task(operation: viewModel.loadMoreCharacters)
-                        }
+                CharacterCell(
+                    character: character,
+                    persistance: persistance
+                )
+                .onAppear {
+                    if viewModel.canLoadMore && viewModel.hasReachedEnd(of: character) {
+                        Task(operation: viewModel.loadMoreCharacters)
                     }
+                }
             }
         }
         loadMoreSection
@@ -89,15 +103,24 @@ struct CharacterView: View {
 
 #Preview("Character mock view") {
     let viewModelMock = CharacterViewModelMock(loadState: .success(Character.mocks))
-    CharacterView(viewModel: viewModelMock)
+    CharacterView(
+        viewModel: viewModelMock,
+        persistance: MockPersistanceServices()
+    )
 }
 
 #Preview("Loading view") {
     let viewModelMock = CharacterViewModelMock()
-    CharacterView(viewModel: viewModelMock)
+    CharacterView(
+        viewModel: viewModelMock,
+        persistance: MockPersistanceServices()
+    )
 }
 
 #Preview("Error view") {
     let viewModelMock = CharacterViewModelMock(loadState: .failure(APIError.invalidURL))
-    CharacterView(viewModel: viewModelMock)
+    CharacterView(
+        viewModel: viewModelMock,
+        persistance: MockPersistanceServices()
+    )
 }

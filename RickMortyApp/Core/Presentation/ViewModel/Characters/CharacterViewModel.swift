@@ -30,6 +30,8 @@ final class CharacterViewModelImpl: CharacterViewModel {
     private(set) var isLoadingMore: Bool = false
     private(set) var nextCharactersPageURL: URL?
 
+    /// Holds the complete pagination metadata from the last API response.
+    /// A `didSet` observer automatically parses the `next` URL string and updates `nextCharactersPageURL`.
     private(set) var paginationInfo: CharacterContainer? {
         didSet {
             nextCharactersPageURL = paginationInfo
@@ -46,15 +48,29 @@ final class CharacterViewModelImpl: CharacterViewModel {
         self.useCase = useCase
     }
     
-    /// Fetches the initial set of characters from the use case.
-    /// This method handles the primary state transitions for the view.
+    /// Fetches the initial character list, prioritizing the local cache
+    ///
+    /// This method first attempts to load data from the local cache. If successful, the network
+    /// request is skipped to maintain the user's full pagination state from the previous session.
+    /// A network fetch is only performed if the cache is empty.
     func getCharacters() async {
-        guard case .loading = loadState else { return }
+        guard characters.isEmpty || !useCase.cacheExists else { return }
         
         loadState = .loading
         
+        if let cachedContainer = try? useCase.getCachedCharacters() {
+            characters = cachedContainer.results
+            paginationInfo = cachedContainer
+            self.loadState = .success(characters)
+            return
+        }
+        
         do {
-            let container = try await useCase.execute(endpoint: .character(page: nil))
+            let container = try await useCase.execute(
+                endpoint: .character(page: nil),
+                currentCharacters: []
+            )
+            
             characters = container.results
             paginationInfo = container
             loadState = .success(characters)
@@ -63,17 +79,22 @@ final class CharacterViewModelImpl: CharacterViewModel {
         }
     }
     
-    /// Fetches the next page of characters using the `nextCharactersPageURL`.
-    /// This method will exit early if a pagination request is already in progress or if the last page has been reached.
+    /// Fetches the next page of characters and updates the character list.
+    ///
+    /// This method calls the use case to handle fetching, combining results, and updating the cache.
+    /// The ViewModel then replaces its state with the new, complete data set returned by the use case.
     func loadMoreCharacters() async {
-        guard !isLoadingMore, let url = nextCharactersPageURL else { return }
+        guard !isLoadingMore else { return }
 
         isLoadingMore = true
         defer { isLoadingMore = false }
 
         do {
-            let container = try await useCase.execute(endpoint: .absolute(url: url))
-            characters.append(contentsOf: container.results)
+            let container = try await useCase.execute(
+                endpoint: .absolute(url: nextCharactersPageURL),
+                currentCharacters: characters
+            )
+            characters = container.results
             paginationInfo = container
         } catch {
             loadState = .failure(error)

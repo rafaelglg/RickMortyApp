@@ -10,10 +10,12 @@ import SwiftUI
 @main
 struct RickMortyAppApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    let persistance: ProductionPersistanceServices = ProductionPersistanceServices()
     
     var body: some Scene {
         WindowGroup {
-            CharacterView(viewModel: appDelegate.dependencies.makeCharacterViewModel())
+            TabbarView(dependencies: appDelegate.dependencies)
+                .environment(persistance)
         }
     }
 }
@@ -26,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
-        dependencies = Dependencies()
+        dependencies = DependenciesImpl()
         return true
     }
 }

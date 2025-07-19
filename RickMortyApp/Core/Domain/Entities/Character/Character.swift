@@ -17,6 +17,10 @@ struct Info: Codable {
     let pages: Int
     let next: String?
     let prev: String?
+    
+    static var empty: Info {
+        Info(count: 0, pages: 0, next: nil, prev: nil)
+    }
 }
 
 struct Character: Codable, Identifiable, Hashable {
@@ -114,7 +118,7 @@ struct Character: Codable, Identifiable, Hashable {
                     name: "Earth (Replacement Dimension)",
                     url: "https://rickandmortyapi.com/api/location/20"
                 ),
-                image: "https://rickandmortyapi.com/api/character/avatar/3.jpeg",
+                image: "",
                 episode: [
                     "https://rickandmortyapi.com/api/episode/6",
                     "https://rickandmortyapi.com/api/episode/7",

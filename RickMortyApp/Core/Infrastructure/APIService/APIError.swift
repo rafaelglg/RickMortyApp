@@ -12,6 +12,7 @@ enum APIError: Error, LocalizedError, Equatable {
     case requestFailed(statusCode: Int)
     case decodingError(Error)
     case noNextPage
+    case unsupportedEndpoint(endpoint: RickMortyEndpoints)
     
     var errorDescription: String? {
         switch self {
@@ -23,6 +24,8 @@ enum APIError: Error, LocalizedError, Equatable {
             return "Failed to process the server's response due to error: \(error.localizedDescription)."
         case .noNextPage:
             return "There is no next page available."
+        case .unsupportedEndpoint(let endpoint):
+            return "Endpoint not supported by RickMortyAPI: \(endpoint)."
         }
     }
     
@@ -35,6 +38,8 @@ enum APIError: Error, LocalizedError, Equatable {
         case let (.decodingError(lhsError), .decodingError(rhsError)):
             return String(describing: lhsError) == String(describing: rhsError)
         case (.noNextPage, .noNextPage):
+            return true
+        case (.unsupportedEndpoint, .unsupportedEndpoint):
             return true
         default:
             return false
