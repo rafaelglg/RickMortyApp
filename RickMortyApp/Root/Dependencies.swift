@@ -12,18 +12,6 @@ protocol Dependencies {
 }
 
 @MainActor
-final class DependenciesMock: Dependencies {
-    
-    func makeCharacterViewModel(persistance: PersistanceServices) -> CharacterViewModel {
-        CharacterViewModelMock(loadState: .success(Character.mocks))
-    }
-    
-    func makeSettingsViewModel(persistance: PersistanceServices) -> SettingsViewModel {
-        SettingsViewModelMock()
-    }
-}
-
-@MainActor
 final class DependenciesImpl: Dependencies {
     
     func makeCharacterViewModel(persistance: PersistanceServices) -> CharacterViewModel {

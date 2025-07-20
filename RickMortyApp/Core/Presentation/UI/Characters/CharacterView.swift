@@ -43,7 +43,10 @@ struct CharacterView: View {
         .navigationTitle("Characters")
         .scrollIndicators(.hidden)
         .navigationDestination(for: Character.self) { character in
-            CharacterDetail(character: character)
+            CharacterDetail(
+                character: character,
+                persistance: persistance
+            )
         }
     }
     

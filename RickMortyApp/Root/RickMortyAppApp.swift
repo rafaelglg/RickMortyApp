@@ -10,12 +10,11 @@ import SwiftUI
 @main
 struct RickMortyAppApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    let persistance: ProductionPersistanceServices = ProductionPersistanceServices()
     
     var body: some Scene {
         WindowGroup {
             TabbarView(dependencies: appDelegate.dependencies)
-                .environment(persistance)
+                .environment(appDelegate.persistance)
         }
     }
 }
@@ -23,12 +22,20 @@ struct RickMortyAppApp: App {
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var dependencies: Dependencies!
+    var persistance: ProductionPersistanceServices!
     
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         dependencies = DependenciesImpl()
+        
+        let localStorage: FileStorage = FileStorageImpl()
+        persistance = ProductionPersistanceServices(
+            remote: FirebaseRemotePersistance(),
+            local: CacheManager(storage: localStorage)
+        )
+        
         return true
     }
 }

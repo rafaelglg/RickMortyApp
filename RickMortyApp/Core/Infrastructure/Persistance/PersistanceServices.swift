@@ -18,8 +18,8 @@ final class ProductionPersistanceServices: PersistanceServices {
     var local: LocalPersistance
     
     init(
-        remote: RemotePersistance = FirebaseRemotePersistance(),
-        local: LocalPersistance = CacheManager()
+        remote: RemotePersistance,
+        local: LocalPersistance
     ) {
         self.remote = remote
         self.local = local

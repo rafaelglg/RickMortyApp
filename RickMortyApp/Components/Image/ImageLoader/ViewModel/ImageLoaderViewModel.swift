@@ -1,5 +1,5 @@
 //
-//  ImageLoaderViewodel.swift
+//  ImageLoaderViewModel.swift
 //  RickMortyApp
 //
 //  Created by Rafael Loggiodice on 19/7/25.
@@ -8,17 +8,20 @@
 import Foundation
 
 @MainActor
-protocol ImageLoaderViewodel {
+protocol ImageLoaderViewModel: Sendable {
     var url: URL { get }
+    var loadState: LoadState<Data> { get }
     
-    func loadImage() async -> Data?
+    func loadImage() async
 }
 
 @Observable
 @MainActor
-final class ImageLoaderViewodelImpl: ImageLoaderViewodel {
+final class ImageLoaderViewodelImpl: ImageLoaderViewModel {
     let localPersistance: LocalPersistance
     let url: URL
+    
+    var loadState: LoadState<Data> = .initial
     
     init(
         persistance: PersistanceServices,
@@ -28,19 +31,22 @@ final class ImageLoaderViewodelImpl: ImageLoaderViewodel {
         self.url = url
     }
     
-    func loadImage() async -> Data? {
+    func loadImage() async {
+        
+        loadState = .loading
+        
         let cacheKey = url.lastPathComponent
         
         if let data = localPersistance.loadCachedImageData(forKey: cacheKey) {
-            return data
+            loadState = .success(data)
         }
         
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             try localPersistance.saveCacheImageData(data, forKey: cacheKey)
-            return data
+            loadState = .success(data)
         } catch {
-            return nil
+            loadState = .failure(error)
         }
     }
 }

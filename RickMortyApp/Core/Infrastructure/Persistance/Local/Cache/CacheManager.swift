@@ -8,18 +8,23 @@
 import Foundation
 
 struct CacheManager: LocalPersistance {
+    let storage: FileStorage
     let dataCacheKey = "characters_info"
     let imageCacheKey = "characters_image"
+    
+    init(storage: FileStorage) {
+        self.storage = storage
+    }
     
     // MARK: - Shared
     
     func clearAll() throws {
-        try FileManager.default.deleteAppCacheFolder()
+        try storage.deleteAppCacheFolder()
     }
     
     func getCacheSizeInMB() throws -> Double {
-        let url = FileManager.default.getAppCacheFolderURL()
-        let cacheFolderSize = try FileManager.default.calculateSizeOfDirectory(at: url)
+        let url = storage.getAppCacheFolderURL()
+        let cacheFolderSize = try storage.calculateSizeOfDirectory(at: url)
         let totalSizeInMB = Double(cacheFolderSize) / (1024.0 * 1024.0)
         
         return totalSizeInMB
@@ -27,39 +32,39 @@ struct CacheManager: LocalPersistance {
     
     // MARK: - Objects cache
     var exists: Bool {
-        FileManager.default
+        storage
             .exists(dataCacheKey)
     }
     
     func load<T: Codable>() throws -> T? {
-        try FileManager.default
+        try storage
             .load(forKey: dataCacheKey)
     }
     
     func save<T: Codable>(data: T) throws {
-        try FileManager.default
+        try storage
             .save(data, forKey: dataCacheKey)
     }
     
     func clear() throws {
-        try FileManager.default
+        try storage
             .deleteCache(forKey: dataCacheKey)
     }
     
     // MARK: - Image Cache
     func loadCachedImageData(forKey key: String) -> Data? {
-        FileManager.default.loadImageData(forKey: key)
+        storage.loadImageData(forKey: key)
     }
     
     func saveCacheImageData(_ data: Data, forKey key: String) throws {
-        try FileManager.default.saveImageData(data, forKey: key)
+        try storage.saveImageData(data, forKey: key)
     }
     
     func deleteImageCache(forKey key: String) throws {
-        try FileManager.default.deleteImageCache(forKey: key)
+        try storage.deleteImageCache(forKey: key)
     }
     
     func imageCacheExists(forKey key: String) -> Bool {
-        FileManager.default.imageCacheExists(forKey: key)
+        storage.imageCacheExists(forKey: key)
     }
 }

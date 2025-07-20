@@ -11,6 +11,7 @@ import Foundation
 @MainActor
 final class SettingsViewModelMock: SettingsViewModel {
     var cacheSizeInMB: String = "0.0"
+    
     var showingClearCacheConfirmation: Bool = false
     
     var isCacheEmpty: Bool {
@@ -18,7 +19,7 @@ final class SettingsViewModelMock: SettingsViewModel {
     }
     
     func getCacheSizeInKB() {
-        cacheSizeInMB = "70.20"
+        cacheSizeInMB = "70.2"
     }
     
     func clearCache() {

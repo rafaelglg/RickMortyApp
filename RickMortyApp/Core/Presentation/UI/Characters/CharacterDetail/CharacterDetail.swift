@@ -10,6 +10,7 @@ import SwiftUI
 struct CharacterDetail: View {
     
     let character: Character
+    let persistance: PersistanceServices
     
     var body: some View {
         ScrollView {
@@ -25,40 +26,29 @@ struct CharacterDetail: View {
     }
     
     var imageSection: some View {
-        AsyncImage(
-            url: character.imageURL,
-            transaction: Transaction(animation: .spring)) { phase in
-            
-            switch phase {
-            case .empty:
-                Rectangle()
-                    .frame(width: 450, height: 450)
-                    .shimmerEffect()
-                    .clipShape(.rect(cornerRadius: 10))
-            case .success(let image):
-                image
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 450, height: 450)
-                    .clipShape(.rect(cornerRadius: 10))
-            case .failure:
-                Image(systemName: "photo")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 440, height: 440)
-                    .foregroundColor(.gray)
-                    .clipShape(.rect(cornerRadius: 10))
-            @unknown default:
-                EmptyView()
-            }
-        }
+        ImageLoader(
+            viewModel: ImageLoaderViewodelImpl(
+                persistance: persistance,
+                url: character.imageURL
+            ),
+            size: CGSize(
+                width: 450,
+                height: 450
+            )
+        )
     }
 }
 
 #Preview("Mock Character") {
-    CharacterDetail(character: .mock)
+    CharacterDetail(
+        character: .mock,
+        persistance: MockPersistanceServices()
+    )
 }
 
 #Preview("Empty Character") {
-    CharacterDetail(character: .empty)
+    CharacterDetail(
+        character: .empty,
+        persistance: MockPersistanceServices()
+    )
 }

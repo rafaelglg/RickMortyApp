@@ -38,5 +38,10 @@ struct TabbarView: View {
 #Preview {
     let dependenciesMock = DependenciesMock()
     TabbarView(dependencies: dependenciesMock)
-        .environment(ProductionPersistanceServices())
+        .environment(
+            ProductionPersistanceServices(
+                remote: FirebaseRemotePersistance(),
+                local: CacheManagerMock()
+            )
+        )
 }
