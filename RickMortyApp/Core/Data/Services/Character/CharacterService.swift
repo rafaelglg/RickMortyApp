@@ -14,7 +14,7 @@ struct CharacterServiceImpl: CharacterService {
     let apiService: APIService
     
     func getCharacters(endpoint: RickMortyEndpoints) async throws -> CharacterContainer {
-        let response: CharacterContainer = try await apiService.fetchCharacters(endpoint: endpoint)
+        let response: CharacterContainer = try await apiService.fetch(endpoint: endpoint)
         return response
     }
 }

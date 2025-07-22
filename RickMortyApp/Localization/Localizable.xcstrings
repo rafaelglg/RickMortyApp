@@ -50,6 +50,12 @@
     "Episodes" : {
 
     },
+    "Episodes in which the character appeared." : {
+
+    },
+    "Error loading more characters" : {
+
+    },
     "Loading..." : {
       "localizations" : {
         "es" : {
@@ -70,10 +76,16 @@
         }
       }
     },
+    "Retry" : {
+
+    },
     "Settings" : {
 
     },
     "Size: %@ MB" : {
+
+    },
+    "Tap to retry" : {
 
     },
     "This will permanently remove all cached characters. You’ll need to re-download data next time. Do you want to continue?" : {

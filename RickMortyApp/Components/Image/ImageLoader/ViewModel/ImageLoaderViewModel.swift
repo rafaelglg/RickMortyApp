@@ -11,6 +11,7 @@ import Foundation
 protocol ImageLoaderViewModel: Sendable {
     var url: URL { get }
     var loadState: LoadState<Data> { get }
+    var isRetrying: Bool { get set }
     
     func loadImage() async
 }
@@ -22,6 +23,7 @@ final class ImageLoaderViewodelImpl: ImageLoaderViewModel {
     let url: URL
     
     var loadState: LoadState<Data> = .initial
+    var isRetrying: Bool = false
     
     init(
         persistance: PersistanceServices,
@@ -32,13 +34,13 @@ final class ImageLoaderViewodelImpl: ImageLoaderViewModel {
     }
     
     func loadImage() async {
-        
         loadState = .loading
         
         let cacheKey = url.lastPathComponent
         
         if let data = localPersistance.loadCachedImageData(forKey: cacheKey) {
             loadState = .success(data)
+            return
         }
         
         do {

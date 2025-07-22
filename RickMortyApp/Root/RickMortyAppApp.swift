@@ -10,11 +10,13 @@ import SwiftUI
 @main
 struct RickMortyAppApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    let networkManager: NetworkManager = NetworkManager.shared
     
     var body: some Scene {
         WindowGroup {
             TabbarView(dependencies: appDelegate.dependencies)
                 .environment(appDelegate.persistance)
+                .environment(networkManager)
         }
     }
 }

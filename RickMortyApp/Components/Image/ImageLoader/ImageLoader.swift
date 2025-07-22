@@ -9,27 +9,26 @@ import SwiftUI
 
 struct ImageLoader: View {
     
-    let size: CGSize?
-    
     @State var viewModel: ImageLoaderViewModel
-    @State var uiImage: UIImage?
+    
+    var title: String?
+    var subtitle: String?
     
     init(
         viewModel: ImageLoaderViewModel,
-        size: CGSize? = nil
+        title: String? = nil,
+        subtitle: String? = nil
     ) {
         self.viewModel = viewModel
-        self.size = size
+        self.title = title
+        self.subtitle = subtitle
+        Task {
+            await viewModel.loadImage()
+        }
     }
     
     var body: some View {
         imageSection
-            .task(viewModel.loadImage)
-            .onChange(of: viewModel.loadState) { _, newValue in
-                if case let .success(data) = newValue {
-                    self.uiImage = UIImage(data: data)
-                }
-            }
     }
     
     @ViewBuilder
@@ -46,48 +45,107 @@ struct ImageLoader: View {
     
     var placeholderImageView: some View {
         Rectangle()
-            .frame(
-                width: size?.width,
-                height: size?.height
-            )
+            .scaledToFill()
             .shimmerEffect()
-            .clipShape(.rect(cornerRadius: 20))
+            .addingGradientBackgroundForText()
+            .clipShape(.rect(cornerRadius: 15))
     }
     
     @ViewBuilder
     func loadImage(data: Data) -> some View {
-        if let uiImage {
-            Image(uiImage: uiImage)
-                .resizable()
-                .scaledToFit()
-                .clipShape(.rect(cornerRadius: 20))
-                .transition(.opacity)
-                .animation(.bouncy, value: viewModel.url)
-                .frame(
-                    width: size?.width,
-                    height: size?.height
+        if let uiImage = UIImage(data: data) {
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color.gray.opacity(0.3))
+                .overlay(
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                        .clipShape(.rect(cornerRadius: 15))
+                        .transition(.opacity)
+                        .animation(.bouncy, value: viewModel.url)
+                        .overlay(alignment: .bottomLeading) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                if let title {
+                                    Text(title)
+                                        .font(.largeTitle)
+                                        .bold()
+                                }
+                                
+                                if let subtitle {
+                                    Text(subtitle)
+                                        .font(.subheadline)
+                                }
+                            }
+                            .foregroundStyle(.white)
+                            .padding(16)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .addingGradientBackgroundForText()
+                            .clipShape(.rect(cornerRadius: 15))
+                        }
                 )
         }
     }
     
     var imageDidNotLoad: some View {
-        Image(systemName: "photo")
-            .resizable()
-            .scaledToFill()
-            .frame(
-                width: size?.width,
-                height: size?.height
-            )
-            .foregroundColor(.gray)
-            .clipShape(.rect(cornerRadius: 10))
+        Button {
+            
+            withAnimation(.spring) {
+                viewModel.isRetrying = true
+            }
+            
+            Task {
+                await viewModel.loadImage()
+                viewModel.isRetrying = false
+            }
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color(uiColor: .systemGray5))
+                
+                VStack(spacing: 8) {
+                    Image(systemName: "arrow.clockwise.circle.fill")
+                        .font(.system(size: 25))
+                        .foregroundColor(.secondary)
+                        .rotationEffect(.degrees(viewModel.isRetrying ? 360 : 0))
+                    
+                    Text("Tap to retry")
+                        .font(.caption)
+                        .bold()
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+        .buttonStyle(.plain)
+        .animation(viewModel.isRetrying ? .spring : nil, value: viewModel.isRetrying)
     }
 }
 
-#Preview {
+#Preview("With title and subtitle") {
+    List {
+        let viewModel = ImageLoaderViewodelMock(useLoadImage: true)
+        ImageLoader(
+            viewModel: viewModel,
+            title: "Some Title",
+            subtitle: "Some subtitle"
+        )
+        .frame(
+            maxWidth: .infinity,
+            minHeight: 400,
+            maxHeight: 600
+        )
+        .removeListRowFormatting()
+    }
+}
+
+#Preview("Only image") {
     let viewModel = ImageLoaderViewodelMock(useLoadImage: true)
     ImageLoader(
-        viewModel: viewModel,
-        size: CGSize(width: 350, height: 350)
+        viewModel: viewModel
+    )
+    .frame(
+        maxWidth: .infinity,
+        minHeight: 200,
+        maxHeight: 500
     )
     .task(viewModel.loadImage)
 }
@@ -96,15 +154,23 @@ struct ImageLoader: View {
     ImageLoader(
         viewModel: ImageLoaderViewodelMock(
             loadState: .loading
-        ), size: CGSize(width: 350, height: 350)
+        )
+    )
+    .frame(
+        width: 300,
+        height: 350
     )
 }
 
-#Preview("W/out image view") {
+#Preview("Image didn't load") {
     ImageLoader(
         viewModel: ImageLoaderViewodelMock(
             url: Character.empty.imageURL,
             loadState: .failure(APIError.invalidURL)
-        ), size: CGSize(width: 350, height: 350)
+        )
+    )
+    .frame(
+        width: 200,
+        height: 200
     )
 }

@@ -9,16 +9,9 @@ import SwiftUI
 
 struct CharacterView: View {
     
+    let dependencies: Dependencies
     let persistance: PersistanceServices
     @State var viewModel: CharacterViewModel
-    
-    init(
-        viewModel: CharacterViewModel,
-        persistance: PersistanceServices
-    ) {
-        self.viewModel = viewModel
-        self.persistance = persistance
-    }
     
     var body: some View {
         NavigationStack {
@@ -45,7 +38,8 @@ struct CharacterView: View {
         .navigationDestination(for: Character.self) { character in
             CharacterDetail(
                 character: character,
-                persistance: persistance
+                persistance: persistance,
+                viewModel: dependencies.makeCharacterDetailViewModel()
             )
         }
     }
@@ -82,12 +76,38 @@ struct CharacterView: View {
                 .frame(height: 120)
                 .removeListRowFormatting()
                 .id(UUID()) // To force the view to not reuse the same view from before, instead created new one every time
+        } else if let error = viewModel.loadMoreError {
+            VStack(spacing: -10) {
+                ContentUnavailableView(
+                    "Error loading more characters",
+                    systemImage: "exclamationmark.triangle.fill",
+                    description: Text(
+                        error.localizedDescription
+                    )
+                )
+                
+                Button("Retry") {
+                    Task {
+                        await viewModel.getCharacters()
+                        await viewModel.loadMoreCharacters()
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            .padding(.top)
+            .removeListRowFormatting()
         }
     }
     
     func errorView(error: Error) -> some View {
         VStack {
-            ContentUnavailableView("Could not load characters", systemImage: "exclamationmark.triangle.fill", description: Text(error.localizedDescription))
+            ContentUnavailableView(
+                "Could not load characters",
+                systemImage: "exclamationmark.triangle.fill",
+                description: Text(
+                    error.localizedDescription
+                )
+            )
             
             Button {
                 Task {
@@ -107,23 +127,35 @@ struct CharacterView: View {
 #Preview("Character mock view") {
     let viewModelMock = CharacterViewModelMock(loadState: .success(Character.mocks))
     CharacterView(
-        viewModel: viewModelMock,
-        persistance: MockPersistanceServices()
+        dependencies: DependenciesMock(),
+        persistance: MockPersistanceServices(),
+        viewModel: viewModelMock
+    )
+}
+
+#Preview("Character error in list") {
+    let viewModelMock = CharacterViewModelMock(loadState: .success(Character.mocks), loadMoreError: APIError.invalidURL)
+    CharacterView(
+        dependencies: DependenciesMock(),
+        persistance: MockPersistanceServices(),
+        viewModel: viewModelMock
     )
 }
 
 #Preview("Loading view") {
     let viewModelMock = CharacterViewModelMock()
     CharacterView(
-        viewModel: viewModelMock,
-        persistance: MockPersistanceServices()
+        dependencies: DependenciesMock(),
+        persistance: MockPersistanceServices(),
+        viewModel: viewModelMock
     )
 }
 
 #Preview("Error view") {
     let viewModelMock = CharacterViewModelMock(loadState: .failure(APIError.invalidURL))
     CharacterView(
-        viewModel: viewModelMock,
-        persistance: MockPersistanceServices()
+        dependencies: DependenciesMock(),
+        persistance: MockPersistanceServices(),
+        viewModel: viewModelMock
     )
 }

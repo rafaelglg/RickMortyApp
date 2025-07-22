@@ -32,4 +32,14 @@ extension View {
     func toAnyView() -> AnyView {
         AnyView(self)
     }
+    
+    func addingGradientBackgroundForText() -> some View {
+        background(
+            LinearGradient(colors: [
+                Color.black.opacity(0),
+                Color.black.opacity(0.5),
+                Color.black.opacity(0.7)
+            ], startPoint: .top, endPoint: .bottom)
+        )
+    }
 }

@@ -32,21 +32,20 @@ struct CharacterCell: View {
             viewModel: ImageLoaderViewodelImpl(
                 persistance: persistance,
                 url: character.imageURL
-            ),
-            size: CGSize(
-                width: 120,
-                height: 120
             )
+        )
+        .frame(
+            width: 120,
+            height: 120
         )
     }
     
     var infoSection: some View {
         VStack(alignment: .leading) {
             Text(character.name)
-                .lineLimit(1)
+                .lineLimit(2)
                 .allowsTightening(true)
-                .minimumScaleFactor(0.6)
-                .truncationMode(.tail)
+                .minimumScaleFactor(0.5)
                 .font(.headline)
             Text(character.gender)
                 .font(.callout)
@@ -73,7 +72,7 @@ struct CharacterCell: View {
     }
 }
 
-#Preview("W/out picture") {
+#Preview("Image didn't load") {
     List {
         CharacterCell(
             character: .mocks[2],

@@ -8,7 +8,7 @@
 import Foundation
 
 protocol APIService: Sendable {
-    func fetchCharacters<T: Codable>(endpoint: RickMortyEndpoints) async throws -> T
+    func fetch<T: Codable>(endpoint: RickMortyEndpoints) async throws -> T
 }
 
 struct APIServiceImpl: APIService {
@@ -18,7 +18,7 @@ struct APIServiceImpl: APIService {
     /// - Parameter endpoint: The API endpoint to request.
     /// - Returns: A decoded object of type `T` conforming to `Codable`.
     /// - Throws: An `APIError` if the URL is invalid, the request fails, or decoding fails.
-    func fetchCharacters<T: Codable>(endpoint: RickMortyEndpoints) async throws -> T {
+    func fetch<T: Codable>(endpoint: RickMortyEndpoints) async throws -> T {
         let url = try endpoint.asURL()
         let (data, response) = try await URLSession.shared.data(from: url)
         try handleResponse(response: response)

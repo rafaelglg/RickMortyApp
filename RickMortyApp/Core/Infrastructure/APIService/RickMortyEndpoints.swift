@@ -11,6 +11,7 @@ enum RickMortyEndpoints {
     case character(page: Int?)
     case episode(page: Int?)
     case absolute(url: URL?)
+    case episodeDetails(id: Int)
     
     /// The path component of the endpoint.
     ///
@@ -20,6 +21,7 @@ enum RickMortyEndpoints {
         case .character: return "/character"
         case .episode: return "/episode"
         case .absolute: return ""
+        case .episodeDetails(id: let id): return "/episode/\(id)"
         }
     }
     
@@ -43,7 +45,7 @@ enum RickMortyEndpoints {
                 return [URLQueryItem(name: "page", value: "\(page)")]
             }
             return nil
-        case .absolute: return nil
+        case .absolute, .episodeDetails: return nil
         }
     }
     

@@ -14,6 +14,8 @@ final class ImageLoaderViewodelMock: ImageLoaderViewModel {
     let url: URL
     var loadState: LoadState<Data>
     var useLoadImage: Bool
+    var isRetrying: Bool = false
+    
     init(
         url: URL = Character.mock.imageURL,
         loadState: LoadState<Data> = .initial,
@@ -25,6 +27,9 @@ final class ImageLoaderViewodelMock: ImageLoaderViewModel {
     }
     
     func loadImage() async {
+        isRetrying = true
+        
+        defer { isRetrying = false }
         
         guard useLoadImage,
               let url = URL(string: "https://picsum.photos/500") else { return }

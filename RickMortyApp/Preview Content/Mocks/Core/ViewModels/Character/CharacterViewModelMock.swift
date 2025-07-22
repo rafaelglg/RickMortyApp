@@ -9,6 +9,7 @@ import Foundation
 @Observable
 @MainActor
 final class CharacterViewModelMock: CharacterViewModel {
+    
     let delay: Double
     let loadState: LoadState<[Character]>
     
@@ -16,15 +17,18 @@ final class CharacterViewModelMock: CharacterViewModel {
     var isLoadingMore: Bool = false
     var characters: [Character]
     var canLoadMore: Bool = true
+    var loadMoreError: Error?
     
     init(
         characters: [Character] = Character.mocks,
         delay: Double = 0.0,
-        loadState: LoadState<[Character]> = .initial
+        loadState: LoadState<[Character]> = .initial,
+        loadMoreError: Error? = nil
     ) {
         self.characters = characters
         self.delay = delay
         self.loadState = loadState
+        self.loadMoreError = loadMoreError
     }
     
     func getCharacters() async {
@@ -32,6 +36,9 @@ final class CharacterViewModelMock: CharacterViewModel {
     }
     
     func loadMoreCharacters() async {
+        
+        guard loadMoreError == nil else { return }
+        
         isLoadingMore = true
         try? await Task.sleep(for: .seconds(1.5))
         isLoadingMore = false

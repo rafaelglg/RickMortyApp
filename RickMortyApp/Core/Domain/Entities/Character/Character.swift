@@ -33,9 +33,14 @@ struct Character: Codable, Identifiable, Hashable {
     let origin: Origin
     let location: Location
     let image: String
-    let episode: [String]
+    let episodes: [String]
     let url: String
     let created: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name, status, species, type, gender, origin, location, image, url, created
+        case episodes = "episode"
+    }
     
     var imageURL: URL {
         guard let url = URL(string: image) else {
@@ -45,12 +50,26 @@ struct Character: Codable, Identifiable, Hashable {
         return url
     }
     
+    var formattedCreatedDate: String {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        guard let date = isoFormatter.date(from: created) else { return "" }
+
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        formatter.locale = Locale.current
+        
+        return formatter.string(from: date)
+    }
+    
     static var mock: Character {
         .mocks[0]
     }
     
     static var empty: Character {
-        Character(id: 0, name: "", status: "", species: "", type: "", gender: "", origin: Origin(name: "", url: ""), location: Location(name: "", url: ""), image: "", episode: [""], url: "", created: "")
+        Character(id: 0, name: "", status: "", species: "", type: "", gender: "", origin: Origin(name: "", url: ""), location: Location(name: "", url: ""), image: "", episodes: [""], url: "", created: "")
     }
     
     static var mocks: [Character] {
@@ -65,7 +84,7 @@ struct Character: Codable, Identifiable, Hashable {
                 origin: Origin(name: "Earth (C-137)", url: "https://rickandmortyapi.com/api/location/1"),
                 location: Location(name: "Citadel of Ricks", url: "https://rickandmortyapi.com/api/location/3"),
                 image: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/1",
                     "https://rickandmortyapi.com/api/episode/2",
                     "https://rickandmortyapi.com/api/episode/3",
@@ -92,7 +111,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/3"
                 ),
                 image: "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/1",
                     "https://rickandmortyapi.com/api/episode/2",
                     "https://rickandmortyapi.com/api/episode/3",
@@ -105,7 +124,7 @@ struct Character: Codable, Identifiable, Hashable {
             ),
             Character(
                 id: 3,
-                name: "Summer Smith",
+                name: "Hole in the Wall Where the Men Can See it All",
                 status: "Alive",
                 species: "Human",
                 type: "",
@@ -119,7 +138,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/20"
                 ),
                 image: "",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/6",
                     "https://rickandmortyapi.com/api/episode/7",
                     "https://rickandmortyapi.com/api/episode/8",
@@ -182,7 +201,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/20"
                 ),
                 image: "https://rickandmortyapi.com/api/character/avatar/4.jpeg",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/6",
                     "https://rickandmortyapi.com/api/episode/7",
                     "https://rickandmortyapi.com/api/episode/8",
@@ -245,7 +264,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/20"
                 ),
                 image: "https://rickandmortyapi.com/api/character/avatar/5.jpeg",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/6",
                     "https://rickandmortyapi.com/api/episode/7",
                     "https://rickandmortyapi.com/api/episode/8",
@@ -305,7 +324,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/2"
                 ),
                 image: "https://rickandmortyapi.com/api/character/avatar/6.jpeg",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/27"
                 ],
                 url: "https://rickandmortyapi.com/api/character/6",
@@ -327,7 +346,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/21"
                 ),
                 image: "https://rickandmortyapi.com/api/character/avatar/7.jpeg",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/10",
                     "https://rickandmortyapi.com/api/episode/11"
                 ],
@@ -350,7 +369,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/3"
                 ),
                 image: "https://rickandmortyapi.com/api/character/avatar/8.jpeg",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/28"
                 ],
                 url: "https://rickandmortyapi.com/api/character/8",
@@ -372,7 +391,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/20"
                 ),
                 image: "https://rickandmortyapi.com/api/character/avatar/9.jpeg",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/24"
                 ],
                 url: "https://rickandmortyapi.com/api/character/9",
@@ -394,7 +413,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/4"
                 ),
                 image: "https://rickandmortyapi.com/api/character/avatar/10.jpeg",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/25"
                 ],
                 url: "https://rickandmortyapi.com/api/character/10",
@@ -416,7 +435,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/20"
                 ),
                 image: "https://rickandmortyapi.com/api/character/avatar/11.jpeg",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/12"
                 ],
                 url: "https://rickandmortyapi.com/api/character/11",
@@ -438,7 +457,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/5"
                 ),
                 image: "https://rickandmortyapi.com/api/character/avatar/12.jpeg",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/3"
                 ],
                 url: "https://rickandmortyapi.com/api/character/12",
@@ -460,7 +479,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/20"
                 ),
                 image: "https://rickandmortyapi.com/api/character/avatar/13.jpeg",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/31"
                 ],
                 url: "https://rickandmortyapi.com/api/character/13",
@@ -482,7 +501,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/3"
                 ),
                 image: "https://rickandmortyapi.com/api/character/avatar/14.jpeg",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/10"
                 ],
                 url: "https://rickandmortyapi.com/api/character/14",
@@ -504,7 +523,7 @@ struct Character: Codable, Identifiable, Hashable {
                     url: "https://rickandmortyapi.com/api/location/3"
                 ),
                 image: "",
-                episode: [
+                episodes: [
                     "https://rickandmortyapi.com/api/episode/10",
                     "https://rickandmortyapi.com/api/episode/22"
                 ],

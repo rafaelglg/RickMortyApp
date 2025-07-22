@@ -13,6 +13,7 @@ protocol CharacterViewModel: Sendable {
     var loadState: LoadState<[Character]> { get }
     var isLoadingMore: Bool { get }
     var canLoadMore: Bool { get }
+    var loadMoreError: Error? { get }
     
     func getCharacters() async
     func loadMoreCharacters() async
@@ -24,11 +25,13 @@ protocol CharacterViewModel: Sendable {
 final class CharacterViewModelImpl: CharacterViewModel {
     
     let useCase: CharacterUseCase
+    let network: NetworkManager
     
     private(set) var characters: [Character] = []
     private(set) var loadState: LoadState<[Character]> = .initial
     private(set) var isLoadingMore: Bool = false
     private(set) var nextCharactersPageURL: URL?
+    private(set) var loadMoreError: Error?
 
     /// Holds the complete pagination metadata from the last API response.
     /// A `didSet` observer automatically parses the `next` URL string and updates `nextCharactersPageURL`.
@@ -44,8 +47,12 @@ final class CharacterViewModelImpl: CharacterViewModel {
         return !isLoadingMore && nextCharactersPageURL != nil
     }
     
-    init(useCase: CharacterUseCase) {
+    init(
+        useCase: CharacterUseCase,
+        network: NetworkManager
+    ) {
         self.useCase = useCase
+        self.network = network
     }
     
     /// Fetches the initial character list, prioritizing the local cache
@@ -73,6 +80,7 @@ final class CharacterViewModelImpl: CharacterViewModel {
             
             characters = container.results
             paginationInfo = container
+            loadMoreError = nil
             loadState = .success(characters)
         } catch {
             loadState = .failure(error)
@@ -84,6 +92,11 @@ final class CharacterViewModelImpl: CharacterViewModel {
     /// This method calls the use case to handle fetching, combining results, and updating the cache.
     /// The ViewModel then replaces its state with the new, complete data set returned by the use case.
     func loadMoreCharacters() async {
+        guard network.isConnected else {
+            loadMoreError = AppError.networkError
+            return
+        }
+        
         guard !isLoadingMore else { return }
 
         isLoadingMore = true
@@ -97,7 +110,10 @@ final class CharacterViewModelImpl: CharacterViewModel {
             characters = container.results
             paginationInfo = container
         } catch {
-            loadState = .failure(error)
+            loadMoreError = error
+            if characters.isEmpty {
+                loadState = .failure(error)
+            }
         }
     }
     

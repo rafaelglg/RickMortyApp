@@ -11,17 +11,20 @@ struct TabbarView: View {
     
     var dependencies: Dependencies
     @Environment(ProductionPersistanceServices.self) var persistance
+    @Environment(NetworkManager.self) var networkManager
     
     var body: some View {
         TabView {
             Tab("Characters", systemImage: "person.fill") {
                 CharacterView(
-                    viewModel: dependencies.makeCharacterViewModel(persistance: persistance), persistance: persistance
+                    dependencies: dependencies,
+                    persistance: persistance,
+                    viewModel: dependencies
+                        .makeCharacterViewModel(
+                            persistance: persistance,
+                            network: networkManager
+                        )
                 )
-            }
-            
-            Tab("Episodes", systemImage: "tv") {
-                Text("Episodes")
             }
             
             Tab("Settings", systemImage: "gearshape") {
@@ -44,4 +47,5 @@ struct TabbarView: View {
                 local: CacheManagerMock()
             )
         )
+        .environment(NetworkManager.shared)
 }
