@@ -2,34 +2,104 @@
   "sourceLanguage" : "en",
   "strings" : {
     "1" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1"
+          }
+        }
+      }
     },
     "1.0" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.0"
+          }
+        }
+      }
     },
     "App Storage" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Almacenamiento de la App"
+          }
+        }
+      }
     },
     "Application" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplicación"
+          }
+        }
+      }
     },
     "Build Number" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Número de compilación"
+          }
+        }
+      }
     },
     "Cached characters help speed up the app. You can clear them to free up space. This action is permanent." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los personajes en caché ayudan a acelerar la app. Puedes eliminarlos para liberar espacio. Esta acción es permanente."
+          }
+        }
+      }
     },
     "Cancel" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        }
+      }
     },
     "Characters" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personajes"
+          }
+        }
+      }
     },
     "Clear cache" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar caché"
+          }
+        }
+      }
     },
     "Clear Cache?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar caché?"
+          }
+        }
+      }
     },
     "Could not load characters" : {
       "localizations" : {
@@ -42,19 +112,54 @@
       }
     },
     "Created by Rafael loggiodice." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creado por Rafael Loggiodice"
+          }
+        }
+      }
     },
     "Delete Entire Cache" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar toda la caché"
+          }
+        }
+      }
     },
     "Episodes" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Episodios"
+          }
+        }
+      }
     },
     "Episodes in which the character appeared." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Episodios en los que aparece el personaje."
+          }
+        }
+      }
     },
     "Error loading more characters" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error al cargar más personajes"
+          }
+        }
+      }
     },
     "Loading..." : {
       "localizations" : {
@@ -62,6 +167,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cargando…"
+          }
+        }
+      }
+    },
+    "No Results Found" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron resultados"
           }
         }
       }
@@ -77,22 +192,84 @@
       }
     },
     "Retry" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reintentar"
+          }
+        }
+      }
+    },
+    "Search characters" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar personajes"
+          }
+        }
+      }
     },
     "Settings" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
+          }
+        }
+      }
     },
     "Size: %@ MB" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamaño: %@ MB"
+          }
+        }
+      }
     },
     "Tap to retry" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca para reintentar"
+          }
+        }
+      }
+    },
+    "There are no characters matching your search for \"%@\". Try a different name." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay personajes que coincidan con tu búsqueda de \\\"%@\\\". Prueba con otro nombre."
+          }
+        }
+      }
     },
     "This will permanently remove all cached characters. You’ll need to re-download data next time. Do you want to continue?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto eliminará permanentemente todos los personajes en caché. Tendrás que volver a descargar los datos la próxima vez. ¿Quieres continuar?"
+          }
+        }
+      }
     },
     "Version" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versión"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

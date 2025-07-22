@@ -1,5 +1,5 @@
 //
-//  ImageLoaderViewodelMock.swift
+//  ImageLoaderViewModelMock.swift
 //  RickMortyApp
 //
 //  Created by Rafael Loggiodice on 20/7/25.
@@ -9,7 +9,7 @@ import Foundation
 
 @Observable
 @MainActor
-final class ImageLoaderViewodelMock: ImageLoaderViewModel {
+final class ImageLoaderViewModelMock: ImageLoaderViewModel {
     
     let url: URL
     var loadState: LoadState<Data>

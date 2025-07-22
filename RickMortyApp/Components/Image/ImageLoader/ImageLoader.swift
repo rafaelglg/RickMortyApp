@@ -63,26 +63,28 @@ struct ImageLoader: View {
                         .clipShape(.rect(cornerRadius: 15))
                         .transition(.opacity)
                         .animation(.bouncy, value: viewModel.url)
-                        .overlay(alignment: .bottomLeading) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                if let title {
-                                    Text(title)
-                                        .font(.largeTitle)
-                                        .bold()
-                                }
-                                
-                                if let subtitle {
-                                    Text(subtitle)
-                                        .font(.subheadline)
-                                }
-                            }
-                            .foregroundStyle(.white)
-                            .padding(16)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .addingGradientBackgroundForText()
-                            .clipShape(.rect(cornerRadius: 15))
-                        }
                 )
+                .overlay(alignment: .bottomLeading) {
+                    if title != nil || subtitle != nil {
+                        VStack(alignment: .leading, spacing: 4) {
+                            if let title {
+                                Text(title)
+                                    .font(.largeTitle)
+                                    .bold()
+                            }
+                            
+                            if let subtitle {
+                                Text(subtitle)
+                                    .font(.subheadline)
+                            }
+                        }
+                        .foregroundStyle(.white)
+                        .padding(16)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .addingGradientBackgroundForText()
+                    }
+                }
+                .clipShape(.rect(cornerRadius: 15))
         }
     }
     
@@ -97,6 +99,7 @@ struct ImageLoader: View {
                 await viewModel.loadImage()
                 viewModel.isRetrying = false
             }
+            
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 15)
@@ -122,7 +125,7 @@ struct ImageLoader: View {
 
 #Preview("With title and subtitle") {
     List {
-        let viewModel = ImageLoaderViewodelMock(useLoadImage: true)
+        let viewModel = ImageLoaderViewModelMock(useLoadImage: true)
         ImageLoader(
             viewModel: viewModel,
             title: "Some Title",
@@ -138,7 +141,7 @@ struct ImageLoader: View {
 }
 
 #Preview("Only image") {
-    let viewModel = ImageLoaderViewodelMock(useLoadImage: true)
+    let viewModel = ImageLoaderViewModelMock(useLoadImage: true)
     ImageLoader(
         viewModel: viewModel
     )
@@ -152,7 +155,7 @@ struct ImageLoader: View {
 
 #Preview("Loading view") {
     ImageLoader(
-        viewModel: ImageLoaderViewodelMock(
+        viewModel: ImageLoaderViewModelMock(
             loadState: .loading
         )
     )
@@ -164,7 +167,7 @@ struct ImageLoader: View {
 
 #Preview("Image didn't load") {
     ImageLoader(
-        viewModel: ImageLoaderViewodelMock(
+        viewModel: ImageLoaderViewModelMock(
             url: Character.empty.imageURL,
             loadState: .failure(APIError.invalidURL)
         )

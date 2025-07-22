@@ -13,6 +13,7 @@ enum APIError: Error, LocalizedError, Equatable {
     case decodingError(Error)
     case noNextPage
     case unsupportedEndpoint(endpoint: RickMortyEndpoints)
+    case itemNotFound
     
     var errorDescription: String? {
         switch self {
@@ -26,6 +27,7 @@ enum APIError: Error, LocalizedError, Equatable {
             return "There is no next page available."
         case .unsupportedEndpoint(let endpoint):
             return "Endpoint not supported by RickMortyAPI: \(endpoint)."
+        case .itemNotFound: return "The requested character could not be found."
         }
     }
     
@@ -40,6 +42,8 @@ enum APIError: Error, LocalizedError, Equatable {
         case (.noNextPage, .noNextPage):
             return true
         case (.unsupportedEndpoint, .unsupportedEndpoint):
+            return true
+        case (.itemNotFound, .itemNotFound):
             return true
         default:
             return false

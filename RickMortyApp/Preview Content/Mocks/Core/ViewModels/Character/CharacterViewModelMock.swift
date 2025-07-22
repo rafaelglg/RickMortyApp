@@ -19,20 +19,28 @@ final class CharacterViewModelMock: CharacterViewModel {
     var canLoadMore: Bool = true
     var loadMoreError: Error?
     
+    var searchText: String
+    
     init(
         characters: [Character] = Character.mocks,
         delay: Double = 0.0,
         loadState: LoadState<[Character]> = .initial,
-        loadMoreError: Error? = nil
+        loadMoreError: Error? = nil,
+        searchText: String = ""
     ) {
         self.characters = characters
         self.delay = delay
         self.loadState = loadState
         self.loadMoreError = loadMoreError
+        self.searchText = searchText
     }
     
     func getCharacters() async {
         try? await Task.sleep(for: .seconds(delay))
+    }
+    
+    func searchCharacters(query: String) async {
+        searchText = query
     }
     
     func loadMoreCharacters() async {

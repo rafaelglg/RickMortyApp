@@ -54,7 +54,6 @@ final class CharacterDetailViewModelImpl: CharacterDetailViewModel {
             self.loadState = .success(fetchedEpisodes)
             
         } catch {
-            print(error.localizedDescription)
             self.loadState = .failure(error)
         }
     }

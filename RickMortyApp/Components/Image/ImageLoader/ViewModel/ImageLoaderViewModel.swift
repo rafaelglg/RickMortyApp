@@ -18,7 +18,7 @@ protocol ImageLoaderViewModel: Sendable {
 
 @Observable
 @MainActor
-final class ImageLoaderViewodelImpl: ImageLoaderViewModel {
+final class ImageLoaderViewModelImpl: ImageLoaderViewModel {
     let localPersistance: LocalPersistance
     let url: URL
     

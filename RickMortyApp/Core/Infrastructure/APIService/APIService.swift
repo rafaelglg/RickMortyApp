@@ -36,7 +36,12 @@ struct APIServiceImpl: APIService {
             throw APIError.requestFailed(statusCode: -1)
         }
         
-        guard (200...299).contains(status) else {
+        switch status {
+        case 200...299:
+            return
+        case 404:
+            throw APIError.itemNotFound
+        default:
             throw APIError.requestFailed(statusCode: status)
         }
     }

@@ -32,7 +32,7 @@ struct CharacterView: View {
                 errorView(error: error)
             }
         }
-        .searchable(text: .constant(""))
+        .searchable(text: $viewModel.searchText, prompt: "Search characters")
         .navigationTitle("Characters")
         .scrollIndicators(.hidden)
         .navigationDestination(for: Character.self) { character in
@@ -41,6 +41,11 @@ struct CharacterView: View {
                 persistance: persistance,
                 viewModel: dependencies.makeCharacterDetailViewModel()
             )
+        }
+        .onChange(of: viewModel.searchText) { _, newValue in
+            Task {
+                await viewModel.searchCharacters(query: newValue)
+            }
         }
     }
     
@@ -99,38 +104,60 @@ struct CharacterView: View {
         }
     }
     
+    @ViewBuilder
     func errorView(error: Error) -> some View {
-        VStack {
+        if !viewModel.searchText.isEmpty {
             ContentUnavailableView(
-                "Could not load characters",
-                systemImage: "exclamationmark.triangle.fill",
-                description: Text(
-                    error.localizedDescription
-                )
+                "No Results Found",
+                systemImage: "magnifyingglass",
+                description: Text("There are no characters matching your search for \"\(viewModel.searchText)\". Try a different name.")
             )
+            .removeListRowFormatting()
             
-            Button {
-                Task {
-                    await viewModel.getCharacters()
+        } else if viewModel.characters.isEmpty {
+            VStack {
+                ContentUnavailableView(
+                    "Could not load characters",
+                    systemImage: "exclamationmark.triangle.fill",
+                    description: Text(
+                        error.localizedDescription
+                    )
+                )
+                
+                Button {
+                    Task {
+                        await viewModel.getCharacters()
+                    }
+                } label: {
+                    Text("Reload")
+                        .frame(width: 150, height: 40)
                 }
-            } label: {
-                Text("Reload")
-                    .frame(width: 150, height: 40)
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.capsule)
             }
-            .buttonStyle(.borderedProminent)
-            .buttonBorderShape(.capsule)
+            .removeListRowFormatting()
         }
-        .removeListRowFormatting()
     }
 }
 
 #Preview("Character mock view") {
-    let viewModelMock = CharacterViewModelMock(loadState: .success(Character.mocks))
+    @Previewable @State var searchText: String = ""
+    let viewModelMock = CharacterViewModelMock(
+        loadState: .success(
+            Character.mocks
+        ),
+        searchText: searchText
+    )
     CharacterView(
         dependencies: DependenciesMock(),
         persistance: MockPersistanceServices(),
         viewModel: viewModelMock
     )
+    .onChange(of: searchText) { _, newValue in
+        Task {
+           await viewModelMock.searchCharacters(query: newValue)
+        }
+    }
 }
 
 #Preview("Character error in list") {

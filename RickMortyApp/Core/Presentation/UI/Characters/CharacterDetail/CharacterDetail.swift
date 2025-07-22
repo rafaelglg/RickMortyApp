@@ -29,7 +29,7 @@ struct CharacterDetail: View {
     
     var imageSection: some View {
         ImageLoader(
-            viewModel: ImageLoaderViewodelImpl(
+            viewModel: ImageLoaderViewModelImpl(
                 persistance: persistance,
                 url: character.imageURL
             ),

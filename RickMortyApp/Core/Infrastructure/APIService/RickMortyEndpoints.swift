@@ -7,18 +7,23 @@
 
 import Foundation
 
+struct CharacterFilter {
+    var name: String?
+}
+
 enum RickMortyEndpoints {
     case character(page: Int?)
     case episode(page: Int?)
     case absolute(url: URL?)
     case episodeDetails(id: Int)
+    case filterCharacters(filter: CharacterFilter)
     
     /// The path component of the endpoint.
     ///
     /// For `.absolute`, this returns an empty string since the full URL is provided.
     var path: String {
         switch self {
-        case .character: return "/character"
+        case .character, .filterCharacters: return "/character"
         case .episode: return "/episode"
         case .absolute: return ""
         case .episodeDetails(id: let id): return "/episode/\(id)"
@@ -44,6 +49,12 @@ enum RickMortyEndpoints {
             if let page {
                 return [URLQueryItem(name: "page", value: "\(page)")]
             }
+            return nil
+        case .filterCharacters(filter: let filter):
+            if let name = filter.name, !name.isEmpty {
+                return [URLQueryItem(name: "name", value: name)]
+            }
+            
             return nil
         case .absolute, .episodeDetails: return nil
         }

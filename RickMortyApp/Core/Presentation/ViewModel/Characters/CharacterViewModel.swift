@@ -15,9 +15,12 @@ protocol CharacterViewModel: Sendable {
     var canLoadMore: Bool { get }
     var loadMoreError: Error? { get }
     
+    var searchText: String { get set }
+    
     func getCharacters() async
     func loadMoreCharacters() async
     func hasReachedEnd(of character: Character) -> Bool
+    func searchCharacters(query: String) async
 }
 
 @Observable
@@ -32,6 +35,8 @@ final class CharacterViewModelImpl: CharacterViewModel {
     private(set) var isLoadingMore: Bool = false
     private(set) var nextCharactersPageURL: URL?
     private(set) var loadMoreError: Error?
+    
+    var searchText: String = ""
 
     /// Holds the complete pagination metadata from the last API response.
     /// A `didSet` observer automatically parses the `next` URL string and updates `nextCharactersPageURL`.
@@ -62,7 +67,10 @@ final class CharacterViewModelImpl: CharacterViewModel {
     /// A network fetch is only performed if the cache is empty.
     func getCharacters() async {
         guard characters.isEmpty || !useCase.cacheExists else { return }
-        
+        await performGetCharacters()
+    }
+    
+    func performGetCharacters() async {
         loadState = .loading
         
         if let cachedContainer = try? useCase.getCachedCharacters() {
@@ -123,5 +131,31 @@ final class CharacterViewModelImpl: CharacterViewModel {
     /// - Returns: `true` if the provided character is the last element, `false` otherwise.
     func hasReachedEnd(of character: Character) -> Bool {
         characters.last == character
+    }
+    
+    func searchCharacters(query: String) async {
+        guard !query.isEmpty else {
+            await performGetCharacters()
+            return
+        }
+        
+        loadState = .loading
+        characters = []
+        
+        // Kind of debounce
+        try? await Task.sleep(for: .milliseconds(500))
+        
+        do {
+            let filter = CharacterFilter(name: query)
+            let container = try await useCase.execute(
+                endpoint: .filterCharacters(filter: filter),
+                currentCharacters: []
+            )
+            characters = container.results
+            paginationInfo = container
+            loadState = .success(characters)
+        } catch {
+            loadState = .failure(error)
+        }
     }
 }

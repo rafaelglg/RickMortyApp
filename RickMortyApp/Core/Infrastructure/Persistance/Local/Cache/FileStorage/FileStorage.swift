@@ -58,7 +58,6 @@ struct FileStorageImpl: FileStorage {
         if !fileManager.fileExists(atPath: appCacheURL.path) {
             try? fileManager.createDirectory(at: appCacheURL, withIntermediateDirectories: true)
         }
-        print(appCacheURL.absoluteString)
         return appCacheURL
     }
     

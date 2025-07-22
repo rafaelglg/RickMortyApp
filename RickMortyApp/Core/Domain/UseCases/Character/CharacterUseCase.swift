@@ -35,6 +35,8 @@ struct CharacterUseCaseImpl: CharacterUseCase {
             return try await executeGetCharacter(id: page)
         case .absolute(let url):
             return try await executeNextPagination(url: url, currentCharacters: currentCharacters)
+        case .filterCharacters(let filter):
+            return try await executeSearchCharacters(query: filter)
         default:
             throw APIError.unsupportedEndpoint(endpoint: endpoint)
         }
@@ -56,6 +58,10 @@ struct CharacterUseCaseImpl: CharacterUseCase {
         
         try repository.saveCharactersToCache(remoteContainer)
         return remoteContainer
+    }
+    
+    func executeSearchCharacters(query: CharacterFilter) async throws -> CharacterContainer {
+        try await repository.getCharacters(endpoint: .filterCharacters(filter: query))
     }
     
     func executeNextPagination(url: URL?, currentCharacters: [Character]) async throws -> CharacterContainer {
