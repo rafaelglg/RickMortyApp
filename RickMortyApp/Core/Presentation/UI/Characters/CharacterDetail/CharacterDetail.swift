@@ -92,8 +92,10 @@ struct CharacterDetail: View {
                 }
             } header: {
                 Text("Episodes")
+                    .accessibilityIdentifier("EpisodeHeader")
             } footer: {
                 Text("Episodes in which the character appeared.")
+                    .accessibilityIdentifier("EpisodeFooter")
             }
         }
     }

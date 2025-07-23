@@ -71,11 +71,13 @@ struct ImageLoader: View {
                                 Text(title)
                                     .font(.largeTitle)
                                     .bold()
+                                    .accessibilityIdentifier("CharacterNames")
                             }
                             
                             if let subtitle {
                                 Text(subtitle)
                                     .font(.subheadline)
+                                    .accessibilityIdentifier("CharacterSpecies")
                             }
                         }
                         .foregroundStyle(.white)

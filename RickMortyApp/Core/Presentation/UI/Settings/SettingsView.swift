@@ -41,6 +41,7 @@ struct SettingsView: View {
                     }
                 }
                 .disabled(viewModel.isCacheEmpty)
+                .accessibilityIdentifier("clearCacheButton")
                 
                 Spacer()
                 Text("Size: \(viewModel.cacheSizeInMB) MB")
@@ -49,6 +50,8 @@ struct SettingsView: View {
             }
         } header: {
             Text("App Storage")
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier("AppStorageSectionHeader")
         } footer: {
             Text("Cached characters help speed up the app. You can clear them to free up space. This action is permanent.")
         }

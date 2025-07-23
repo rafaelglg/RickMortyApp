@@ -69,6 +69,7 @@ struct CharacterView: View {
                     }
                 }
             }
+            .accessibilityIdentifier("CharacterCell_\(character.id)")
         }
         loadMoreSection
     }
