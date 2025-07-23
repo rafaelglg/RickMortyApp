@@ -9,7 +9,7 @@ import SwiftUI
 
 struct InfoRow: View {
     var emoji: String
-    var label: String
+    var label: LocalizedStringKey
     var value: String?
 
     var body: some View {

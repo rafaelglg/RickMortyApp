@@ -111,6 +111,16 @@
         }
       }
     },
+    "Created" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha de creación"
+          }
+        }
+      }
+    },
     "Created by Rafael loggiodice." : {
       "localizations" : {
         "es" : {
@@ -161,6 +171,16 @@
         }
       }
     },
+    "Gender" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Género"
+          }
+        }
+      }
+    },
     "Loading..." : {
       "localizations" : {
         "es" : {
@@ -171,12 +191,32 @@
         }
       }
     },
+    "Location" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ubicación"
+          }
+        }
+      }
+    },
     "No Results Found" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No se encontraron resultados"
+          }
+        }
+      }
+    },
+    "Origin" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Origen"
           }
         }
       }
@@ -231,6 +271,26 @@
         }
       }
     },
+    "Species" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Especie"
+          }
+        }
+      }
+    },
+    "Status" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estatus"
+          }
+        }
+      }
+    },
     "Tap to retry" : {
       "localizations" : {
         "es" : {
@@ -257,6 +317,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esto eliminará permanentemente todos los personajes en caché. Tendrás que volver a descargar los datos la próxima vez. ¿Quieres continuar?"
+          }
+        }
+      }
+    },
+    "Type" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipo"
           }
         }
       }
