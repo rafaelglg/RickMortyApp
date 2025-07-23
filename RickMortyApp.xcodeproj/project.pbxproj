@@ -27,6 +27,7 @@
 		53AF626A2E27FE0900CE8AD1 /* RickMortyApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RickMortyApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53AF627B2E27FE0A00CE8AD1 /* RickMortyAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RickMortyAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53AF62852E27FE0A00CE8AD1 /* RickMortyAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RickMortyAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		53D52DEB2E2FC73E001765FB /* RickMortyApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RickMortyApp.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +76,7 @@
 		53AF62612E27FE0900CE8AD1 = {
 			isa = PBXGroup;
 			children = (
+				53D52DEB2E2FC73E001765FB /* RickMortyApp.xctestplan */,
 				53AF626C2E27FE0900CE8AD1 /* RickMortyApp */,
 				53AF627E2E27FE0A00CE8AD1 /* RickMortyAppTests */,
 				53AF62882E27FE0A00CE8AD1 /* RickMortyAppUITests */,

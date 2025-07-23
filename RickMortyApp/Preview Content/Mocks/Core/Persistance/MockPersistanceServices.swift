@@ -9,6 +9,14 @@ import Foundation
 
 @Observable
 final class MockPersistanceServices: PersistanceServices {
-    var remote: RemotePersistance { FirebaseRemotePersistance() }
-    var local: LocalPersistance { CacheManagerMock() }
+    let remote: RemotePersistance
+    let local: LocalPersistance
+    
+    init(
+        remote: RemotePersistance = FirebaseRemotePersistance(),
+        local: LocalPersistance = CacheManagerMock()
+    ) {
+        self.remote = remote
+        self.local = local
+    }
 }

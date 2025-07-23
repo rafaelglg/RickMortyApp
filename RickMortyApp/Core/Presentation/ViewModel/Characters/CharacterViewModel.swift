@@ -28,7 +28,7 @@ protocol CharacterViewModel: Sendable {
 final class CharacterViewModelImpl: CharacterViewModel {
     
     let useCase: CharacterUseCase
-    let network: NetworkManager
+    let network: NetworkStatusProvider
     
     private(set) var characters: [Character] = []
     private(set) var loadState: LoadState<[Character]> = .initial
@@ -54,7 +54,7 @@ final class CharacterViewModelImpl: CharacterViewModel {
     
     init(
         useCase: CharacterUseCase,
-        network: NetworkManager
+        network: NetworkStatusProvider
     ) {
         self.useCase = useCase
         self.network = network

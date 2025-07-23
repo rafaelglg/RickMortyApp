@@ -17,7 +17,7 @@ struct SettingsView: View {
             applicationSection
         }
         
-        .onAppear(perform: viewModel.getCacheSizeInKB)
+        .onAppear(perform: viewModel.getCacheSizeInMB)
         .confirmationDialog(
             "Clear Cache?",
             isPresented: $viewModel.showingClearCacheConfirmation,

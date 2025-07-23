@@ -6,6 +6,7 @@
 //
 
 struct FirebaseRemotePersistance: RemotePersistance {
+    
     var exists: Bool { return false }
     
     func delete() throws { }

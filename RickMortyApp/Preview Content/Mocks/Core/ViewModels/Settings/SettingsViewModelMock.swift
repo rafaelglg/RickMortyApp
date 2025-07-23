@@ -18,7 +18,7 @@ final class SettingsViewModelMock: SettingsViewModel {
         cacheSizeInMB == "0.0"
     }
     
-    func getCacheSizeInKB() {
+    func getCacheSizeInMB() {
         cacheSizeInMB = "70.2"
     }
     

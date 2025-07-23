@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "8C352D24-390A-4710-8AF4-3D4217F7FB71",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:RickMortyApp.xcodeproj",
+        "identifier" : "53AF62842E27FE0A00CE8AD1",
+        "name" : "RickMortyAppUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:RickMortyApp.xcodeproj",
+        "identifier" : "53AF627A2E27FE0A00CE8AD1",
+        "name" : "RickMortyAppTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -13,7 +13,7 @@ protocol SettingsViewModel {
     var isCacheEmpty: Bool { get }
     var showingClearCacheConfirmation: Bool { get set }
     
-    func getCacheSizeInKB()
+    func getCacheSizeInMB()
     func clearCache()
     func toggleCacheConfirmation()
 }
@@ -34,7 +34,7 @@ final class SettingsViewModelImpl: SettingsViewModel {
         self.cacheManager = localPersistance.local
     }
     
-    func getCacheSizeInKB() {
+    func getCacheSizeInMB() {
         let cacheSize = try? cacheManager.getCacheSizeInMB()
         cacheSizeInMB = String(format: "%.1f", cacheSize ?? "0.0")
     }

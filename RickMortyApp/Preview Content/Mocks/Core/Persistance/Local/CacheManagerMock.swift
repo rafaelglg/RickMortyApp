@@ -7,20 +7,46 @@
 
 import Foundation
 
-struct CacheManagerMock: LocalPersistance {
+final class CacheManagerMock: LocalPersistance, @unchecked Sendable {
+    
+    var cacheSize: Double = 0
+    var sizeInCache: Double = 75.4
+    
+    var shouldReturnImageData: Data?
+    var savedCacheImage: Data?
+    var savedCacheKey: String?
+    
+    var saveImageError: Error?
+    
     var exists: Bool = true
     
-    func clearAll() throws { }
+    func clearAll() throws { cacheSize = 0 }
     
     func load<T: Codable>() throws -> T? { nil }
     
     func save<T: Codable>(data: T) throws { }
-    func clear() throws { }
-    func getCacheSizeInMB() throws -> Double { 75.4 }
+    func clear() throws {
+        cacheSize = 0
+    }
     
-    func loadCachedImageData(forKey key: String) -> Data? { nil }
+    func getCacheSizeInMB() throws -> Double {
+        cacheSize = sizeInCache
+        return cacheSize
+    }
     
-    func saveCacheImageData(_ data: Data, forKey key: String) throws { }
+    func loadCachedImageData(forKey key: String) -> Data? {
+        shouldReturnImageData
+    }
+    
+    func saveCacheImageData(_ data: Data, forKey key: String) throws {
+        
+        if let saveImageError {
+            throw saveImageError
+        }
+        
+        savedCacheImage = data
+        savedCacheKey = key
+    }
     
     func deleteImageCache(forKey key: String) throws { }
     
