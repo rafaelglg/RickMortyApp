@@ -11,8 +11,8 @@ import Foundation
 final class CharacterViewModelMock: CharacterViewModel {
     
     let delay: Double
-    let loadState: LoadState<[Character]>
     
+    var loadState: LoadState<[Character]>
     var characterContainer: CharacterContainer?
     var isLoadingMore: Bool = false
     var characters: [Character]
@@ -40,8 +40,20 @@ final class CharacterViewModelMock: CharacterViewModel {
     }
     
     func searchCharacters(query: String) async {
-        searchText = query
+        self.searchText = query
+        
+        if query.isEmpty {
+            characters = Character.mocks
+        } else {
+            characters = characters.filter { character in
+                character.name.localizedCaseInsensitiveContains(query)
+            }
+        }
+        
+        self.loadState = .success(characters)
     }
+    
+    func retryLastAction() async { }
     
     func loadMoreCharacters() async {
         

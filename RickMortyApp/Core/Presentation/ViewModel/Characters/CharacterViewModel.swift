@@ -21,6 +21,7 @@ protocol CharacterViewModel: Sendable {
     func loadMoreCharacters() async
     func hasReachedEnd(of character: Character) -> Bool
     func searchCharacters(query: String) async
+    func retryLastAction() async
 }
 
 @Observable
@@ -155,7 +156,19 @@ final class CharacterViewModelImpl: CharacterViewModel {
             paginationInfo = container
             loadState = .success(characters)
         } catch {
-            loadState = .failure(error)
+            if let apiError = error as? APIError, apiError == .itemNotFound {
+                loadState = .success([])
+            } else {
+                loadState = .failure(error)
+            }
+        }
+    }
+    
+    func retryLastAction() async {
+        if !searchText.isEmpty {
+            await searchCharacters(query: searchText)
+        } else {
+            await getCharacters()
         }
     }
 }

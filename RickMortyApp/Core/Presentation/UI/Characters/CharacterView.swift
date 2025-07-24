@@ -57,21 +57,30 @@ struct CharacterView: View {
     
     @ViewBuilder
     func successView() -> some View {
-        ForEach(viewModel.characters) { character in
-            NavigationLink(value: character) {
-                CharacterCell(
-                    character: character,
-                    persistance: persistance
-                )
-                .onAppear {
-                    if viewModel.canLoadMore && viewModel.hasReachedEnd(of: character) {
-                        Task(operation: viewModel.loadMoreCharacters)
+        if viewModel.characters.isEmpty {
+            ContentUnavailableView(
+                "No Results Found",
+                systemImage: "magnifyingglass",
+                description: Text("There are no characters matching your search for \"\(viewModel.searchText)\". Try a different name.")
+            )
+            .removeListRowFormatting()
+        } else {
+            ForEach(viewModel.characters) { character in
+                NavigationLink(value: character) {
+                    CharacterCell(
+                        character: character,
+                        persistance: persistance
+                    )
+                    .onAppear {
+                        if viewModel.canLoadMore && viewModel.hasReachedEnd(of: character) {
+                            Task(operation: viewModel.loadMoreCharacters)
+                        }
                     }
                 }
+                .accessibilityIdentifier("CharacterCell_\(character.id)")
             }
-            .accessibilityIdentifier("CharacterCell_\(character.id)")
+            loadMoreSection
         }
-        loadMoreSection
     }
     
     @ViewBuilder
@@ -107,37 +116,27 @@ struct CharacterView: View {
     
     @ViewBuilder
     func errorView(error: Error) -> some View {
-        if !viewModel.searchText.isEmpty {
+        VStack {
             ContentUnavailableView(
-                "No Results Found",
-                systemImage: "magnifyingglass",
-                description: Text("There are no characters matching your search for \"\(viewModel.searchText)\". Try a different name.")
-            )
-            .removeListRowFormatting()
-            
-        } else if viewModel.characters.isEmpty {
-            VStack {
-                ContentUnavailableView(
-                    "Could not load characters",
-                    systemImage: "exclamationmark.triangle.fill",
-                    description: Text(
-                        error.localizedDescription
-                    )
+                "Could not load characters",
+                systemImage: "exclamationmark.triangle.fill",
+                description: Text(
+                    error.localizedDescription
                 )
-                
-                Button {
-                    Task {
-                        await viewModel.getCharacters()
-                    }
-                } label: {
-                    Text("Reload")
-                        .frame(width: 150, height: 40)
+            )
+            
+            Button {
+                Task {
+                    await viewModel.retryLastAction()
                 }
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.capsule)
+            } label: {
+                Text("Reload")
+                    .frame(width: 150, height: 40)
             }
-            .removeListRowFormatting()
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
         }
+        .removeListRowFormatting()
     }
 }
 
@@ -156,7 +155,7 @@ struct CharacterView: View {
     )
     .onChange(of: searchText) { _, newValue in
         Task {
-           await viewModelMock.searchCharacters(query: newValue)
+            await viewModelMock.searchCharacters(query: newValue)
         }
     }
 }
