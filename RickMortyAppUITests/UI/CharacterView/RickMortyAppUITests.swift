@@ -104,6 +104,24 @@ final class CharacterViewUITests: XCTestCase {
         XCTAssertTrue(settingsTitle.waitForExistence(timeout: 5))
     }
     
+    func test_tabbarView_tapInSettings_tapClearCache_tapInCancel() {
+        let tabBar = app.tabBars.firstMatch
+        let settingsTab = tabBar.buttons.element(boundBy: 1)
+        XCTAssertTrue(settingsTab.exists)
+        settingsTab.tap()
+
+        let clearCacheButton = app.collectionViews.buttons["clearCacheButton"]
+        XCTAssertTrue(clearCacheButton.waitForExistence(timeout: 5))
+        clearCacheButton.tap()
+        
+        let deleteButton = app.buttons["cancelClearCacheButton"]
+        XCTAssertTrue(deleteButton.waitForExistence(timeout: 5))
+        deleteButton.tap()
+        
+        XCTAssertTrue(clearCacheButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(clearCacheButton.isEnabled)
+    }
+    
     func test_tabbarView_tapInSettings_tapClearCache() {
         let tabBar = app.tabBars.firstMatch
         let settingsTab = tabBar.buttons.element(boundBy: 1)
@@ -120,6 +138,5 @@ final class CharacterViewUITests: XCTestCase {
         
         XCTAssertTrue(clearCacheButton.waitForExistence(timeout: 5))
         XCTAssertFalse(clearCacheButton.isEnabled)
-                
     }
 }
