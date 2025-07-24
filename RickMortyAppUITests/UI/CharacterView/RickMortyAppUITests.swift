@@ -10,18 +10,19 @@ import XCTest
 
 @MainActor
 final class CharacterViewUITests: XCTestCase {
-
-    let app: XCUIApplication = XCUIApplication()
+    
+    var app: XCUIApplication!
     
     override func setUpWithError() throws {
         continueAfterFailure = false
+        app = XCUIApplication()
         app.launch()
     }
-
+    
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        app = nil
     }
-
+    
     func test_characterViewList_enterFirstCell_andBack() {
         
         let collectionViewsQuery = app.collectionViews
@@ -75,22 +76,22 @@ final class CharacterViewUITests: XCTestCase {
     func test_characterViewList_loadMoreCharacter_andTap() {
         let collection = app.collectionViews.firstMatch
         XCTAssertTrue(collection.waitForExistence(timeout: 5))
-
+        
         let targetIndex = 50
         let maxSwipes = 10
         var swipeCount = 0
-
+        
         let targetCell = collection.buttons["CharacterCell_\(targetIndex)"]
-
+        
         while (!targetCell.exists || !targetCell.isHittable) && swipeCount < maxSwipes {
             collection.swipeUp()
             swipeCount += 1
             sleep(1)
         }
-
+        
         XCTAssertTrue(targetCell.exists && targetCell.isHittable, "Cell \(targetIndex) should be visible and tappable")
         targetCell.tap()
-
+        
         app.navigationBars.buttons.element(boundBy: 0).tap()
     }
     
@@ -99,7 +100,7 @@ final class CharacterViewUITests: XCTestCase {
         let settingsTab = tabBar.buttons.element(boundBy: 1)
         XCTAssertTrue(settingsTab.exists)
         settingsTab.tap()
-
+        
         let settingsTitle = app.collectionViews.staticTexts["AppStorageSectionHeader"]
         XCTAssertTrue(settingsTitle.waitForExistence(timeout: 5))
     }
@@ -109,7 +110,7 @@ final class CharacterViewUITests: XCTestCase {
         let settingsTab = tabBar.buttons.element(boundBy: 1)
         XCTAssertTrue(settingsTab.exists)
         settingsTab.tap()
-
+        
         let clearCacheButton = app.collectionViews.buttons["clearCacheButton"]
         XCTAssertTrue(clearCacheButton.waitForExistence(timeout: 5))
         clearCacheButton.tap()
@@ -127,7 +128,7 @@ final class CharacterViewUITests: XCTestCase {
         let settingsTab = tabBar.buttons.element(boundBy: 1)
         XCTAssertTrue(settingsTab.exists)
         settingsTab.tap()
-
+        
         let clearCacheButton = app.collectionViews.buttons["clearCacheButton"]
         XCTAssertTrue(clearCacheButton.waitForExistence(timeout: 5))
         clearCacheButton.tap()

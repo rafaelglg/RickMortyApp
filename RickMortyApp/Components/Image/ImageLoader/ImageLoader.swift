@@ -92,16 +92,17 @@ struct ImageLoader: View {
     
     var imageDidNotLoad: some View {
         Button {
-            
-            withAnimation(.spring) {
-                viewModel.isRetrying = true
-            }
-            
             Task {
+                withAnimation(.spring) {
+                    viewModel.isRetrying = true
+                }
+                
                 await viewModel.loadImage()
-                viewModel.isRetrying = false
+                
+                withAnimation(.spring) {
+                    viewModel.isRetrying = false
+                }
             }
-            
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 15)
@@ -121,7 +122,6 @@ struct ImageLoader: View {
             }
         }
         .buttonStyle(.plain)
-        .animation(viewModel.isRetrying ? .spring : nil, value: viewModel.isRetrying)
     }
 }
 
