@@ -113,5 +113,13 @@ final class CharacterViewUITests: XCTestCase {
         let clearCacheButton = app.collectionViews.buttons["clearCacheButton"]
         XCTAssertTrue(clearCacheButton.waitForExistence(timeout: 5))
         clearCacheButton.tap()
+        
+        let deleteButton = app.buttons["deleteCacheButton"]
+        XCTAssertTrue(deleteButton.waitForExistence(timeout: 5))
+        deleteButton.tap()
+        
+        XCTAssertTrue(clearCacheButton.waitForExistence(timeout: 5))
+        XCTAssertFalse(clearCacheButton.isEnabled)
+                
     }
 }

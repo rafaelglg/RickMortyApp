@@ -24,7 +24,10 @@ struct SettingsView: View {
             titleVisibility: .visible
         ) {
             Button("Delete Entire Cache", role: .destructive, action: viewModel.clearCache)
+                .accessibilityIdentifier("deleteCacheButton")
+            
             Button("Cancel", role: .cancel) { }
+                .accessibilityIdentifier("cancelClearCacheButton")
         } message: {
             Text("This will permanently remove all cached characters. You’ll need to re-download data next time. Do you want to continue?")
         }
