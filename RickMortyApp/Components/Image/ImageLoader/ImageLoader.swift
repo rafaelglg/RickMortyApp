@@ -113,6 +113,7 @@ struct ImageLoader: View {
                         .font(.system(size: 25))
                         .foregroundColor(.secondary)
                         .rotationEffect(.degrees(viewModel.isRetrying ? 360 : 0))
+                        .sensoryFeedback(.selection, trigger: viewModel.isRetrying)
                     
                     Text("Tap to retry")
                         .font(.caption)
